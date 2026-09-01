@@ -479,23 +479,20 @@
 
   <!-- Header -->
   <header>
-    <a href="/book/the-unreadable/" class="brand-title">
-      <span>✦</span> The Anatomy of Echoed Scars
+    <a href="/book/the-unreadable/" class="brand-title" id="mainBrandTitle">
+      <span>✦</span> <span id="headerTitle">The Anatomy of Echoed Scars</span>
     </a>
 
-    <div class="rating-badge" onclick="openModal('reviewModal')" title="View 9.4/10 Detailed Story Review">
-      ⭐ CRITICAL REVIEW: 9.4 / 10
-    </div>
-
     <div class="header-actions">
+      <select id="bookSelector" class="btn-icon" style="background: rgba(212,165,116,0.15); border-color: var(--accent-gold); color: #fff; font-weight: 600;" onchange="switchBook(this.value)">
+        <option value="1">Book 1: The Anatomy of Echoed Scars (258 pgs)</option>
+        <option value="2">Book 2: The Thread of Destiny (178 pgs)</option>
+      </select>
       <button class="btn-icon" onclick="goToCover()">
         🖼️ Cover
       </button>
       <button class="btn-icon" onclick="openModal('tocModal')">
-        📖 Table of Contents (258 Pages)
-      </button>
-      <button class="btn-icon" onclick="openModal('reviewModal')">
-        📊 Review Score
+        📖 Table of Contents
       </button>
     </div>
   </header>
@@ -512,8 +509,8 @@
       <!-- Header Section -->
       <div class="page-header" id="pageHeader">
         <div>
-          <div class="part-tag" id="partTag">Part I — The Architecture of Transference</div>
-          <div class="chapter-tag" id="chapterTag">Chapter 1: The Resonant Nerve</div>
+          <div class="part-tag" id="partTag">Part I</div>
+          <div class="chapter-tag" id="chapterTag">Chapter 1</div>
         </div>
 
         <div class="trauma-bar-container">
@@ -533,9 +530,9 @@
       <div class="page-footer" id="pageFooter">
         <div>Author: <strong>Raj Patil</strong></div>
         <div style="font-family: var(--font-heading); color: var(--accent-gold); font-size: 0.95rem; font-weight: 700;">
-          PAGE <span id="currentPageDisplay">1</span> / 258
+          PAGE <span id="currentPageDisplay">1</span> / <span id="totalPagesDisplay">258</span>
         </div>
-        <div>Genre: Neurological Trauma</div>
+        <div id="genreDisplay">Genre: Neurological Trauma</div>
       </div>
     </div>
 
@@ -547,7 +544,7 @@
         <span style="font-size: 0.8rem; color: var(--accent-gold); font-weight: 600;">PAGE</span>
         <input type="range" min="1" max="258" value="1" class="page-slider" id="pageSlider" oninput="jumpToPage(this.value)">
         <input type="number" min="1" max="258" value="1" class="page-jump-input" id="pageInput" onchange="jumpToPage(this.value)">
-        <span style="font-size: 0.8rem; color: var(--text-muted);">/ 258</span>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">/ <span id="maxPagesLabel">258</span></span>
       </div>
 
       <button class="nav-btn" id="nextBtn" onclick="changePage(1)">Next Page →</button>
@@ -558,7 +555,7 @@
   <div class="modal-overlay" id="tocModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title">Table of Contents (258 Pages)</h2>
+        <h2 class="modal-title" id="tocModalTitle">Table of Contents</h2>
         <button class="close-btn" onclick="closeModal('tocModal')">&times;</button>
       </div>
 
@@ -612,18 +609,50 @@
     </div>
   </div>
 
-  <!-- Novel Data Import & Reader Logic -->
+  <!-- Novel Data Import & Dual-Book Dynamic Reader Logic -->
   <script type="module">
-    import { novelData, chapters, getPageData } from '/src/echoed_scars_novel_data.js';
+    import * as book1Data from '/src/echoed_scars_novel_data.js';
+    import * as book2Data from '/src/thread_of_destiny_novel_data.js';
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let currentBookId = parseInt(urlParams.get('book')) || (window.location.pathname.includes('destiny') ? 2 : 1);
+    let activeData = (currentBookId === 2) ? book2Data : book1Data;
 
     let currentPage = 1;
     let showingCover = false;
+
+    document.getElementById('bookSelector').value = currentBookId;
+
+    window.switchBook = function(id) {
+      currentBookId = parseInt(id);
+      activeData = (currentBookId === 2) ? book2Data : book1Data;
+      currentPage = 1;
+      showingCover = false;
+      updateUIForBook();
+      renderPage();
+      renderTOC();
+    };
+
+    function updateUIForBook() {
+      const meta = activeData.BOOK_METADATA;
+      document.title = `${meta.title} — ${meta.totalPages}-Page A4 Reader`;
+      document.getElementById('headerTitle').innerText = meta.title;
+      document.getElementById('totalPagesDisplay').innerText = meta.totalPages;
+      document.getElementById('maxPagesLabel').innerText = meta.totalPages;
+      document.getElementById('genreDisplay').innerText = `Genre: ${meta.genre}`;
+      document.getElementById('tocModalTitle').innerText = `Table of Contents (${meta.totalPages} Pages)`;
+
+      const slider = document.getElementById('pageSlider');
+      const input = document.getElementById('pageInput');
+      slider.max = meta.totalPages;
+      input.max = meta.totalPages;
+    }
 
     window.jumpToPage = function(page) {
       page = parseInt(page);
       if (isNaN(page)) return;
       if (page < 1) page = 1;
-      if (page > 258) page = 258;
+      if (page > activeData.BOOK_METADATA.totalPages) page = activeData.BOOK_METADATA.totalPages;
       currentPage = page;
       showingCover = false;
       renderPage();
@@ -645,6 +674,7 @@
     };
 
     function renderCoverPage() {
+      const meta = activeData.BOOK_METADATA;
       const pageHeader = document.getElementById('pageHeader');
       const pageBody = document.getElementById('pageBody');
       const pageFooter = document.getElementById('pageFooter');
@@ -652,16 +682,18 @@
       pageHeader.style.display = 'none';
       pageFooter.style.display = 'none';
 
+      const coverSrc = (currentBookId === 2) ? '/cover-thread-of-destiny.jpg' : '/cover.jpg';
+
       pageBody.innerHTML = `
         <div class="cover-view">
           <div class="cover-image-frame">
-            <img src="/cover.jpg" alt="The Anatomy of Echoed Scars Book Cover">
+            <img src="${coverSrc}" alt="${meta.title} Cover">
           </div>
-          <div style="text-align: center; space-y-2;">
-            <div style="font-family: var(--font-heading); color: var(--accent-gold); font-size: 1.8rem; font-weight: 700;">THE ANATOMY OF ECHOED SCARS</div>
-            <div style="font-size: 0.9rem; color: var(--accent-crimson); font-weight: 600; uppercase; letter-spacing: 0.1em; margin-top: 0.2rem;">By Raj Patil • 258 Pages</div>
+          <div style="text-align: center;">
+            <div style="font-family: var(--font-heading); color: var(--accent-gold); font-size: 1.8rem; font-weight: 700;">${meta.title.toUpperCase()}</div>
+            <div style="font-size: 0.9rem; color: var(--accent-crimson); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.2rem;">By ${meta.author} • ${meta.totalPages} Pages</div>
             <p style="font-size: 0.95rem; color: #ebdcc5; margin-top: 0.75rem; max-width: 500px; text-align: center; text-indent: 0;">
-              "Synaptic Echoing transfers traumatic memories between lovers until intimacy becomes psychological self-destruction."
+              "${meta.synopsis}"
             </p>
             <button onclick="jumpToPage(1)" style="margin-top: 1.25rem; background: var(--accent-crimson); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; box-shadow: 0 0 20px rgba(230,57,70,0.5);">
               📖 Begin Reading Page 1
@@ -676,7 +708,7 @@
     }
 
     function renderPage() {
-      const data = getPageData(currentPage);
+      const data = activeData.getPageData(currentPage);
       const pageHeader = document.getElementById('pageHeader');
       const pageBody = document.getElementById('pageBody');
       const pageFooter = document.getElementById('pageFooter');
@@ -684,43 +716,45 @@
       pageHeader.style.display = 'flex';
       pageFooter.style.display = 'flex';
 
-      const partText = data.part || data.partTitle || "Part I — The Genesis of Synaptic Affection";
-      const chapterText = data.chapter || data.chapterTitle || "Chapter 1: The Resonance Chamber";
-      const traumaVal = (data.traumaIndex !== undefined) ? data.traumaIndex : ((data.traumaMeter !== undefined) ? data.traumaMeter : 15);
+      const partText = data.part || data.partTitle || "";
+      const chapterText = data.chapter || data.chapterTitle || "";
+      const traumaVal = (data.traumaIndex !== undefined) ? data.traumaIndex : ((data.traumaMeter !== undefined) ? data.traumaMeter : 20);
 
       document.getElementById('partTag').innerText = partText;
       document.getElementById('chapterTag').innerText = chapterText;
-      document.getElementById('traumaLabel').innerText = `Trauma: ${traumaVal}%`;
+      document.getElementById('traumaLabel').innerText = `Intensity: ${traumaVal}%`;
       document.getElementById('traumaBar').style.width = `${traumaVal}%`;
 
-      pageBody.innerHTML = `<p>${data.content}</p>`;
+      pageBody.innerHTML = `<p>${data.content.replace(/\n\n/g, '</p><p>')}</p>`;
 
       document.getElementById('currentPageDisplay').innerText = currentPage;
       document.getElementById('pageSlider').value = currentPage;
       document.getElementById('pageInput').value = currentPage;
 
       document.getElementById('prevBtn').disabled = (currentPage === 1);
-      document.getElementById('nextBtn').disabled = (currentPage === 258);
+      document.getElementById('nextBtn').disabled = (currentPage === activeData.BOOK_METADATA.totalPages);
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Render Table of Contents
     function renderTOC() {
       const container = document.getElementById('tocContainer');
       let currentPart = '';
       let html = '';
 
-      chapters.forEach(ch => {
-        if (ch.part !== currentPart) {
-          currentPart = ch.part;
+      activeData.CHAPTERS.forEach(ch => {
+        const partObj = activeData.PARTS.find(p => p.id === ch.part);
+        const partName = partObj ? partObj.title : `Part ${ch.part}`;
+
+        if (partName !== currentPart) {
+          currentPart = partName;
           html += `<div class="toc-part">${currentPart}</div>`;
         }
 
         html += `
           <div class="toc-item" onclick="jumpToPage(${ch.startPage}); closeModal('tocModal');">
             <div>
-              <strong>Chapter ${ch.chapterNum}:</strong> ${ch.title}
+              <strong>${ch.number}:</strong> ${ch.title}
             </div>
             <div style="color: var(--accent-gold); font-weight: 600;">
               p. ${ch.startPage}
@@ -749,6 +783,7 @@
       }
     });
 
+    updateUIForBook();
     renderPage();
     renderTOC();
   </script>
