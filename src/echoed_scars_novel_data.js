@@ -151,3 +151,7 @@ The boundary between empathy and self-destruction is as thin as a razor's edge. 
 As the days blur into nights, the phantom sensations intensify. A cold wind blowing through an open window triggers a memory of a frozen lake from twenty years ago—a memory that does not belong to me, yet paints my mind in hues of hypothermic despair. I press my palms against my temples, praying for silence, but the echoes only grow louder.`
   };
 }
+
+export const getPageData = generatePageContent;
+export const novelData = BOOK_METADATA;
+export const chapters = CHAPTERS;
