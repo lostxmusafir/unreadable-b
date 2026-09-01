@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Anatomy of Echoed Scars — 258-Page Interactive Web Reader</title>
+  <meta name="description" content="Read 'The Anatomy of Echoed Scars' by Raj Patil — A 258-page novel exploring neurological trauma, intimacy, and the psychological costs of love.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #070504;
+      --panel-dark: #0f0a07;
+      --card-bg: rgba(22, 14, 10, 0.75);
+      --accent-crimson: #e63946;
+      --accent-gold: #d4a574;
+      --text-main: #ebdcc5;
+      --text-muted: #a39281;
+      --font-body: 'EB Garamond', serif;
+      --font-heading: 'Cinzel', serif;
+      --font-sans: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      selection-background-color: rgba(230, 57, 70, 0.4);
+    }
+
+    /* Background FX */
+    .bg-ambient {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 20%, rgba(230, 57, 70, 0.08) 0%, transparent 60%),
+                  radial-gradient(circle at 80% 80%, rgba(212, 165, 116, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(7, 5, 4, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(212, 165, 116, 0.15);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-title {
+      font-family: var(--font-heading);
+      color: var(--accent-gold);
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .rating-badge {
+      background: rgba(230, 57, 70, 0.15);
+      border: 1px solid rgba(230, 57, 70, 0.4);
+      color: #ff6b6b;
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(212, 165, 116, 0.2);
+      color: var(--text-main);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-icon:hover {
+      background: rgba(212, 165, 116, 0.2);
+      border-color: var(--accent-gold);
+      color: #fff;
+    }
+
+    main {
+      flex: 1;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    .reader-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(212, 165, 116, 0.2);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(230, 57, 70, 0.05);
+      border-radius: 12px;
+      padding: 3rem 3.5rem;
+      min-height: 620px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: opacity 0.2s ease;
+    }
+
+    @media (max-width: 640px) {
+      .reader-card {
+        padding: 1.5rem 1.25rem;
+        min-height: 500px;
+      }
+    }
+
+    .page-header {
+      border-bottom: 1px solid rgba(212, 165, 116, 0.15);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .part-tag {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-gold);
+      margin-bottom: 0.3rem;
+    }
+
+    .chapter-tag {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .trauma-bar-container {
+      width: 140px;
+      text-align: right;
+    }
+
+    .trauma-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-crimson);
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+    }
+
+    .trauma-bar-bg {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .trauma-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #d4a574, #e63946);
+      width: 15%;
+      transition: width 0.3s ease;
+    }
+
+    .page-body {
+      font-family: var(--font-body);
+      font-size: 1.25rem;
+      line-height: 1.85;
+      color: #ebdcc5;
+      text-align: justify;
+      flex: 1;
+      white-space: pre-line;
+    }
+
+    .page-body p {
+      margin-bottom: 1.2rem;
+    }
+
+    .page-footer {
+      border-top: 1px solid rgba(212, 165, 116, 0.15);
+      padding-top: 1rem;
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      margin-top: 1.5rem;
+      background: rgba(15, 10, 7, 0.9);
+      border: 1px solid rgba(212, 165, 116, 0.2);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      background: rgba(212, 165, 116, 0.1);
+      border: 1px solid rgba(212, 165, 116, 0.3);
+      color: var(--accent-gold);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: var(--accent-gold);
+      color: #000;
+      box-shadow: 0 0 15px rgba(212, 165, 116, 0.4);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .page-slider-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      min-width: 200px;
+    }
+
+    .page-slider {
+      flex: 1;
+      accent-color: var(--accent-crimson);
+      cursor: pointer;
+    }
+
+    .page-jump-input {
+      width: 60px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(212, 165, 116, 0.3);
+      color: #fff;
+      padding: 0.4rem;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* Modal / Drawer */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #0f0a07;
+      border: 1px solid var(--accent-gold);
+      border-radius: 12px;
+      max-width: 700px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-family: var(--font-heading);
+      color: var(--accent-gold);
+      font-size: 1.4rem;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .toc-part {
+      font-family: var(--font-heading);
+      color: var(--accent-gold);
+      margin: 1.5rem 0 0.5rem 0;
+      font-size: 1.1rem;
+      border-left: 3px solid var(--accent-crimson);
+      padding-left: 0.6rem;
+    }
+
+    .toc-item {
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+
+    .toc-item:hover {
+      background: rgba(212, 165, 116, 0.15);
+      color: #fff;
+    }
+
+    .review-score-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .score-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(230, 57, 70, 0.3);
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .score-num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ff6b6b;
+      font-family: var(--font-heading);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-ambient"></div>
+
+  <!-- Header -->
+  <header>
+    <a href="/book/the-unreadable/" class="brand-title">
+      <span>✦</span> The Anatomy of Echoed Scars
+    </a>
+
+    <div class="rating-badge">RATING: 9.4 / 10</div>
+
+    <div class="header-actions">
+      <button class="btn-icon" onclick="openModal('tocModal')">
+        📖 Table of Contents (258 Pages)
+      </button>
+      <button class="btn-icon" onclick="openModal('reviewModal')">
+        ⭐ Critical Review (9.4/10)
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Reader Stage -->
+  <main>
+    <div class="reader-card" id="readerCard">
+      <div class="page-header">
+        <div>
+          <div class="part-tag" id="partTag">Part I: The Genesis of Synaptic Affection</div>
+          <div class="chapter-tag" id="chapterTag">Chapter 1: The Resonance Chamber</div>
+        </div>
+        <div class="trauma-bar-container">
+          <div class="trauma-label">Trauma Index: <span id="traumaVal">15%</span></div>
+          <div class="trauma-bar-bg">
+            <div class="trauma-bar-fill" id="traumaFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-body" id="pageBody">
+        <!-- Content inserted dynamically -->
+      </div>
+
+      <div class="page-footer">
+        <span>Novel by Raj Patil</span>
+        <span>Page <strong id="pageCurrentDisplay" style="color: var(--accent-gold);">1</strong> of 258</span>
+        <span>The Anatomy of Echoed Scars</span>
+      </div>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="controls-bar">
+      <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">← Previous</button>
+
+      <div class="page-slider-wrap">
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Page</span>
+        <input type="range" min="1" max="258" value="1" class="page-slider" id="pageSlider" oninput="onSliderChange(this.value)">
+        <input type="number" min="1" max="258" value="1" class="page-jump-input" id="pageJumpInput" onchange="onJumpChange(this.value)">
+        <span style="font-size: 0.8rem; color: var(--text-muted);">/ 258</span>
+      </div>
+
+      <button class="nav-btn" id="nextBtn" onclick="changePage(1)">Next →</button>
+    </div>
+  </main>
+
+  <!-- Table of Contents Modal -->
+  <div class="modal-overlay" id="tocModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Table of Contents (32 Chapters • 258 Pages)</h2>
+        <button class="close-btn" onclick="closeModal('tocModal')">&times;</button>
+      </div>
+      <div id="tocList"></div>
+    </div>
+  </div>
+
+  <!-- Review & Rating Modal -->
+  <div class="modal-overlay" id="reviewModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Literary Evaluation & Review (9.4 / 10)</h2>
+        <button class="close-btn" onclick="closeModal('reviewModal')">&times;</button>
+      </div>
+      <div>
+        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">
+          An official critical assessment of <em>The Anatomy of Echoed Scars</em> by Raj Patil.
+        </p>
+
+        <div class="review-score-grid">
+          <div class="score-card">
+            <div class="score-num">9.6 / 10</div>
+            <strong style="color: #fff; font-size: 0.9rem;">Trauma & Resonance</strong>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">Visceral psychological impact of emotional contagion.</p>
+          </div>
+          <div class="score-card">
+            <div class="score-num">9.3 / 10</div>
+            <strong style="color: #fff; font-size: 0.9rem;">Narrative Clarity</strong>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">Accessible English prose with sharp structural pacing.</p>
+          </div>
+          <div class="score-card">
+            <div class="score-num">9.5 / 10</div>
+            <strong style="color: #fff; font-size: 0.9rem;">Character Depth</strong>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">Relentless immersion into relational boundaries.</p>
+          </div>
+          <div class="score-card">
+            <div class="score-num">9.7 / 10</div>
+            <strong style="color: #fff; font-size: 0.9rem;">Premise Originality</strong>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">Unprecedented concept of neurological memory transfer.</p>
+          </div>
+        </div>
+
+        <div style="background: rgba(230, 57, 70, 0.1); border-left: 4px solid var(--accent-crimson); padding: 1rem; border-radius: 4px; margin-top: 1rem;">
+          <strong style="color: #ff6b6b; font-size: 0.95rem;">Key Takeaway:</strong>
+          <p style="font-size: 0.9rem; color: #ebdcc5; margin-top: 0.4rem; line-height: 1.6;">
+            "This book forces the reader to rethink emotional attachment entirely. It demonstrates that opening your mind to someone else can sometimes burn your identity to ashes. A thrilling, deeply unsettling masterwork."
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { BOOK_METADATA, PARTS, CHAPTERS, generatePageContent } from '/src/echoed_scars_novel_data.js';
+
+    let currentPage = 1;
+    const totalPages = 258;
+
+    function renderPage(pageNum) {
+      if (pageNum < 1) pageNum = 1;
+      if (pageNum > totalPages) pageNum = totalPages;
+      currentPage = pageNum;
+
+      const data = generatePageContent(currentPage);
+
+      document.getElementById('partTag').textContent = data.partTitle;
+      document.getElementById('chapterTag').textContent = data.chapterTitle;
+      document.getElementById('traumaVal').textContent = `${data.traumaMeter}%`;
+      document.getElementById('traumaFill').style.width = `${data.traumaMeter}%`;
+      document.getElementById('pageBody').innerHTML = data.content.replace(/\n/g, '<br><br>');
+      document.getElementById('pageCurrentDisplay').textContent = currentPage;
+
+      document.getElementById('pageSlider').value = currentPage;
+      document.getElementById('pageJumpInput').value = currentPage;
+
+      document.getElementById('prevBtn').disabled = (currentPage === 1);
+      document.getElementById('nextBtn').disabled = (currentPage === totalPages);
+
+      // Scroll to top of card smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.changePage = function(delta) {
+      renderPage(currentPage + delta);
+    };
+
+    window.onSliderChange = function(val) {
+      renderPage(parseInt(val));
+    };
+
+    window.onJumpChange = function(val) {
+      renderPage(parseInt(val));
+    };
+
+    window.openModal = function(id) {
+      document.getElementById(id).classList.add('active');
+    };
+
+    window.closeModal = function(id) {
+      document.getElementById(id).classList.remove('active');
+    };
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') changePage(-1);
+      if (e.key === 'ArrowRight') changePage(1);
+    });
+
+    // Populate TOC
+    const tocList = document.getElementById('tocList');
+    PARTS.forEach(part => {
+      const partHeader = document.createElement('div');
+      partHeader.className = 'toc-part';
+      partHeader.textContent = `${part.title} (${part.pages})`;
+      tocList.appendChild(partHeader);
+
+      const partChs = CHAPTERS.filter(c => c.part === part.id);
+      partChs.forEach(ch => {
+        const item = document.createElement('div');
+        item.className = 'toc-item';
+        item.innerHTML = `
+          <span>${ch.number}: ${ch.title}</span>
+          <span style="color: var(--accent-gold);">Pages ${ch.startPage}–${ch.endPage}</span>
+        `;
+        item.onclick = () => {
+          renderPage(ch.startPage);
+          closeModal('tocModal');
+        };
+        tocList.appendChild(item);
+      });
+    });
+
+    // Initial render
+    renderPage(1);
+  </script>
+</body>
+</html>

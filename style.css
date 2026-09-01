@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "EB Garamond", "Georgia", serif;
+  --font-cinzel: "Cinzel", serif;
+  --font-sans: "Inter", "sans-serif";
+}
+
+/* Custom styling for long-form narrative layout */
+.novel-text-container {
+  font-family: "EB Garamond", Georgia, serif;
+}
+
+.novel-page-content {
+  margin-bottom: 2.5rem;
+}
+
+.novel-page-content p {
+  margin-bottom: 1.35rem;
+  text-indent: 2rem;
+  line-height: 1.95;
+  font-size: 1.18rem;
+  text-align: justify;
+}
+
+/* Remove indent for first paragraph, scene breaks, and images */
+.novel-page-content p:first-of-type,
+.novel-page-content p.no-indent,
+.novel-page-content .scene-break + p {
+  text-indent: 0;
+}
+
+.novel-page-content .part-title,
+.novel-page-content .chapter-title {
+  display: none; /* Already extracted to page headers */
+}
+
+.first-letter {
+  float: left;
+  font-size: 3.8rem;
+  line-height: 0.85;
+  margin-top: 0.15rem;
+  margin-right: 0.65rem;
+  font-family: 'Cinzel', serif;
+  color: #d4a574;
+  font-weight: 700;
+}
+
+.scene-break {
+  text-align: center;
+  margin: 3.5rem 0;
+  color: #d4a574;
+  font-size: 1.5rem;
+  letter-spacing: 12px;
+  font-family: 'Cinzel', serif;
+}
+
+/* Scrollbar styles */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 5px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(212, 165, 116, 0.3);
+  border-radius: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 165, 116, 0.6);
+}
+
+/* Light / Dark Mode transition styling override */
+body.bg-\[\#f5f1e8\] {
+  --text-primary: #1c120c;
+  --text-secondary: rgba(28, 18, 12, 0.7);
+  --border-color: rgba(28, 18, 12, 0.1);
+}
+
+body.bg-\[\#f5f1e8\] h1,
+body.bg-\[\#f5f1e8\] h2,
+body.bg-\[\#f5f1e8\] h3,
+body.bg-\[\#f5f1e8\] h4 {
+  color: #1c120c !important;
+}
+
+body.bg-\[\#f5f1e8\] a {
+  color: #1c120c;
+}
+
+body.bg-\[\#f5f1e8\] a:hover {
+  color: #8b4513;
+}
+
+body.bg-\[\#f5f1e8\] #toc-sidebar {
+  background-color: #eae3d2;
+  border-color: rgba(28, 18, 12, 0.15);
+}
+
+body.bg-\[\#f5f1e8\] #toc-sidebar span {
+  color: #1c120c;
+}
+
+body.bg-\[\#f5f1e8\] #toc-sidebar a {
+  color: #5c4434;
+}
+
+body.bg-\[\#f5f1e8\] #toc-sidebar a.text-\[\#d4a574\] {
+  color: #8b4513 !important;
+  border-color: #8b4513 !important;
+}

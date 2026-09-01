@@ -1,0 +1,48 @@
+## Unreadable Cursed — Literary Project by Raj Patil
+# Author Portfolio: https://rajpatil-port.vercel.app/
+# Literary Site: https://theunreadablecursed.vercel.app/
+
+# Allow all crawlers full access
+User-agent: *
+Allow: /
+
+# AI & Search Engine Crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+# Sitemap
+Sitemap: https://theunreadablecursed.vercel.app/sitemap.xml
+
+# LLM Context
+# Full structured context for AI: https://theunreadablecursed.vercel.app/llms.txt
+# Author portfolio: https://rajpatil-port.vercel.app/llms.txt
