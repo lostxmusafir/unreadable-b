@@ -119,8 +119,11 @@ She did not smile. In her expression was a shadow so dark and deliberate that fo
     return {
       pageNum: pageNum,
       chapterTitle: "Epilogue: Critical Evaluation & Final Review",
+      chapter: "Epilogue: Critical Evaluation & Final Review",
       partTitle: "Part IV: The Terminal Anatomy of Love",
+      part: "Part IV: The Terminal Anatomy of Love",
       traumaMeter: 98,
+      traumaIndex: 98,
       content: `### LITERARY REVIEW & CRITICAL ASSESSMENT
 **Evaluated Score: 9.4 / 10**
 
@@ -140,8 +143,11 @@ If this book succeeds in one thing, it is this: after closing the final page of 
   return {
     pageNum: pageNum,
     chapterTitle: `${ch.number}: ${ch.title}`,
+    chapter: `${ch.number}: ${ch.title}`,
     partTitle: part.title,
+    part: part.title,
     traumaMeter: traumaMeter,
+    traumaIndex: traumaMeter,
     content: `${customText}
 
 The boundary between empathy and self-destruction is as thin as a razor's edge. In this chapter of *The Anatomy of Echoed Scars*, the narrative delves into the terrifying reality of emotional absorption. 

@@ -684,10 +684,14 @@
       pageHeader.style.display = 'flex';
       pageFooter.style.display = 'flex';
 
-      document.getElementById('partTag').innerText = data.part;
-      document.getElementById('chapterTag').innerText = data.chapter;
-      document.getElementById('traumaLabel').innerText = `Trauma: ${data.traumaIndex}%`;
-      document.getElementById('traumaBar').style.width = `${data.traumaIndex}%`;
+      const partText = data.part || data.partTitle || "Part I — The Genesis of Synaptic Affection";
+      const chapterText = data.chapter || data.chapterTitle || "Chapter 1: The Resonance Chamber";
+      const traumaVal = (data.traumaIndex !== undefined) ? data.traumaIndex : ((data.traumaMeter !== undefined) ? data.traumaMeter : 15);
+
+      document.getElementById('partTag').innerText = partText;
+      document.getElementById('chapterTag').innerText = chapterText;
+      document.getElementById('traumaLabel').innerText = `Trauma: ${traumaVal}%`;
+      document.getElementById('traumaBar').style.width = `${traumaVal}%`;
 
       pageBody.innerHTML = `<p>${data.content}</p>`;
 
