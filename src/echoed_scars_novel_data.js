@@ -109,7 +109,7 @@ She did not smile. In her expression was a shadow so dark and deliberate that fo
     
     `Before you fall in love with anyone, look closely at their silence. Listen to what lives in the quiet spaces between their breaths. Because when you open your heart to another person, you aren't just letting in their warmth—you are inviting every monster they have ever run from into your bed.`,
     
-    `By page ${pageNum}, the psychological isolation becomes total. The friends who used to call no longer recognize the person answering the phone. My laugh sounds like Kaelen's father's anger; my posture mirrors the defensive hunch she adopted after her first heartbreak. I have become a museum of her damage.`
+    `As the weeks blur together, the psychological isolation becomes total. The friends who used to call no longer recognize the person answering the phone. My laugh sounds like Kaelen's father's anger; my posture mirrors the defensive hunch she adopted after her first heartbreak. I have become a museum of her damage.`
   ];
 
   let textIndex = pageNum % pageTexts.length;
@@ -142,7 +142,7 @@ If this book succeeds in one thing, it is this: after closing the final page of 
     chapterTitle: `${ch.number}: ${ch.title}`,
     partTitle: part.title,
     traumaMeter: traumaMeter,
-    content: `[Page ${pageNum} of 258] ${customText}
+    content: `${customText}
 
 The boundary between empathy and self-destruction is as thin as a razor's edge. In this chapter of *The Anatomy of Echoed Scars*, the narrative delves into the terrifying reality of emotional absorption. 
 

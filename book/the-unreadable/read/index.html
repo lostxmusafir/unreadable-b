@@ -245,6 +245,7 @@
       line-height: 1.9;
       color: #ebdcc5;
       text-align: justify;
+      text-justify: inter-word;
       flex: 1;
       white-space: pre-line;
     }
@@ -256,6 +257,17 @@
 
     .page-body p:first-of-type {
       text-indent: 0;
+    }
+
+    .page-body p:first-of-type::first-letter {
+      font-family: var(--font-heading);
+      font-size: 3.4rem;
+      float: left;
+      line-height: 0.8;
+      margin-right: 0.55rem;
+      margin-top: 0.1rem;
+      color: var(--accent-gold);
+      font-weight: 700;
     }
 
     .page-footer {
