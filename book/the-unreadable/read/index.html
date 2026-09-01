@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Anatomy of Echoed Scars — 258-Page Interactive Web Reader</title>
+  <title>The Anatomy of Echoed Scars — 258-Page Interactive A4 Web Reader</title>
   <meta name="description" content="Read 'The Anatomy of Echoed Scars' by Raj Patil — A 258-page novel exploring neurological trauma, intimacy, and the psychological costs of love.">
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --bg-dark: #070504;
       --panel-dark: #0f0a07;
-      --card-bg: rgba(22, 14, 10, 0.75);
+      --card-bg: linear-gradient(145deg, #18100c 0%, #100a07 60%, #0d0805 100%);
       --accent-crimson: #e63946;
       --accent-gold: #d4a574;
       --text-main: #ebdcc5;
@@ -42,12 +42,12 @@
       selection-background-color: rgba(230, 57, 70, 0.4);
     }
 
-    /* Background FX */
+    /* Ambient Glow & Texture */
     .bg-ambient {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at 50% 20%, rgba(230, 57, 70, 0.08) 0%, transparent 60%),
-                  radial-gradient(circle at 80% 80%, rgba(212, 165, 116, 0.05) 0%, transparent 50%);
+      background: radial-gradient(circle at 50% 15%, rgba(230, 57, 70, 0.12) 0%, transparent 60%),
+                  radial-gradient(circle at 80% 85%, rgba(212, 165, 116, 0.08) 0%, transparent 50%);
       pointer-events: none;
       z-index: 0;
     }
@@ -56,9 +56,9 @@
       position: sticky;
       top: 0;
       z-index: 40;
-      background: rgba(7, 5, 4, 0.85);
+      background: rgba(7, 5, 4, 0.92);
       backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(212, 165, 116, 0.15);
+      border-bottom: 1px solid rgba(212, 165, 116, 0.2);
       padding: 0.75rem 1.5rem;
       display: flex;
       align-items: center;
@@ -77,30 +77,41 @@
     }
 
     .rating-badge {
-      background: rgba(230, 57, 70, 0.15);
-      border: 1px solid rgba(230, 57, 70, 0.4);
+      background: rgba(230, 57, 70, 0.18);
+      border: 1px solid rgba(230, 57, 70, 0.5);
       color: #ff6b6b;
-      padding: 0.25rem 0.6rem;
+      padding: 0.3rem 0.75rem;
       border-radius: 20px;
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .rating-badge:hover {
+      transform: scale(1.05);
+      background: rgba(230, 57, 70, 0.3);
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
     }
 
     .btn-icon {
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(212, 165, 116, 0.2);
+      border: 1px solid rgba(212, 165, 116, 0.25);
       color: var(--text-main);
-      padding: 0.4rem 0.8rem;
+      padding: 0.45rem 0.9rem;
       border-radius: 6px;
       cursor: pointer;
       font-size: 0.8rem;
+      font-weight: 500;
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
@@ -118,37 +129,65 @@
       z-index: 10;
       display: flex;
       flex-direction: column;
-      max-width: 900px;
+      align-items: center;
+      justify-content: center;
       width: 100%;
       margin: 0 auto;
-      padding: 2rem 1.5rem;
+      padding: 2rem 1rem;
     }
 
-    .reader-card {
+    /* True A4 Paper Proportions Styling */
+    .a4-container {
+      width: 100%;
+      max-width: 210mm;
+      min-height: 297mm;
       background: var(--card-bg);
-      border: 1px solid rgba(212, 165, 116, 0.2);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(230, 57, 70, 0.05);
-      border-radius: 12px;
-      padding: 3rem 3.5rem;
-      min-height: 620px;
+      border: 1px solid rgba(212, 165, 116, 0.35);
+      /* Stacked paper edge shadows */
+      box-shadow: 
+        0 30px 80px rgba(0, 0, 0, 0.95), 
+        6px 6px 0 -1px #1a120c, 
+        7px 7px 0 -1px rgba(212, 165, 116, 0.3),
+        12px 12px 0 -2px #100a07, 
+        13px 13px 0 -2px rgba(230, 57, 70, 0.2),
+        18px 18px 0 -3px #080402;
+      border-radius: 4px;
+      padding: 3.5rem 4rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
-      transition: opacity 0.2s ease;
+      transition: opacity 0.25 ease;
+      /* Left spine shadow */
+      border-left: 6px solid #2a1a12;
     }
 
-    @media (max-width: 640px) {
-      .reader-card {
-        padding: 1.5rem 1.25rem;
-        min-height: 500px;
+    /* Filigree Corner Emblems for A4 Page */
+    .corner-accent {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-color: rgba(212, 165, 116, 0.4);
+      pointer-events: none;
+    }
+    .corner-tl { top: 12px; left: 12px; border-top: 2px solid; border-left: 2px solid; }
+    .corner-tr { top: 12px; right: 12px; border-top: 2px solid; border-right: 2px solid; }
+    .corner-bl { bottom: 12px; left: 12px; border-bottom: 2px solid; border-left: 2px solid; }
+    .corner-br { bottom: 12px; right: 12px; border-bottom: 2px solid; border-right: 2px solid; }
+
+    @media (max-width: 768px) {
+      .a4-container {
+        padding: 2rem 1.5rem;
+        min-height: auto;
+        border-radius: 8px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
       }
     }
 
     .page-header {
-      border-bottom: 1px solid rgba(212, 165, 116, 0.15);
-      padding-bottom: 1rem;
-      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+      padding-bottom: 1.25rem;
+      margin-bottom: 2rem;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
@@ -157,37 +196,39 @@
     .part-tag {
       font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.18em;
       color: var(--accent-gold);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.35rem;
+      font-weight: 600;
     }
 
     .chapter-tag {
       font-family: var(--font-heading);
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       color: #fff;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 0.02em;
     }
 
     .trauma-bar-container {
-      width: 140px;
+      width: 150px;
       text-align: right;
     }
 
     .trauma-label {
       font-size: 0.65rem;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       color: var(--accent-crimson);
-      margin-bottom: 0.25rem;
-      font-weight: 600;
+      margin-bottom: 0.3rem;
+      font-weight: 700;
     }
 
     .trauma-bar-bg {
       width: 100%;
-      height: 4px;
+      height: 5px;
       background: rgba(255, 255, 255, 0.1);
-      border-radius: 2px;
+      border-radius: 3px;
       overflow: hidden;
     }
 
@@ -195,13 +236,13 @@
       height: 100%;
       background: linear-gradient(90deg, #d4a574, #e63946);
       width: 15%;
-      transition: width 0.3s ease;
+      transition: width 0.4s ease;
     }
 
     .page-body {
       font-family: var(--font-body);
-      font-size: 1.25rem;
-      line-height: 1.85;
+      font-size: 1.35rem;
+      line-height: 1.9;
       color: #ebdcc5;
       text-align: justify;
       flex: 1;
@@ -209,25 +250,59 @@
     }
 
     .page-body p {
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.4rem;
+      text-indent: 1.5rem;
+    }
+
+    .page-body p:first-of-type {
+      text-indent: 0;
     }
 
     .page-footer {
-      border-top: 1px solid rgba(212, 165, 116, 0.15);
-      padding-top: 1rem;
-      margin-top: 1.5rem;
+      border-top: 1px solid rgba(212, 165, 116, 0.2);
+      padding-top: 1.25rem;
+      margin-top: 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 0.85rem;
       color: var(--text-muted);
+      font-family: var(--font-sans);
+    }
+
+    /* Cover Page Display */
+    .cover-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-center: center;
+      padding: 1rem 0;
+      gap: 1.5rem;
+    }
+
+    .cover-image-frame {
+      position: relative;
+      max-width: 280px;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9), 0 0 30px rgba(230, 57, 70, 0.3);
+      border: 1px solid rgba(212, 165, 116, 0.4);
+    }
+
+    .cover-image-frame img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
     /* Controls Bar */
     .controls-bar {
-      margin-top: 1.5rem;
-      background: rgba(15, 10, 7, 0.9);
-      border: 1px solid rgba(212, 165, 116, 0.2);
+      margin-top: 1.75rem;
+      max-width: 210mm;
+      width: 100%;
+      background: rgba(15, 10, 7, 0.95);
+      border: 1px solid rgba(212, 165, 116, 0.25);
       border-radius: 12px;
       padding: 1rem 1.5rem;
       display: flex;
@@ -239,20 +314,22 @@
 
     .nav-btn {
       background: rgba(212, 165, 116, 0.1);
-      border: 1px solid rgba(212, 165, 116, 0.3);
+      border: 1px solid rgba(212, 165, 116, 0.35);
       color: var(--accent-gold);
-      padding: 0.6rem 1.2rem;
+      padding: 0.65rem 1.4rem;
       border-radius: 8px;
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
       transition: all 0.2s;
     }
 
     .nav-btn:hover:not(:disabled) {
       background: var(--accent-gold);
       color: #000;
-      box-shadow: 0 0 15px rgba(212, 165, 116, 0.4);
+      box-shadow: 0 0 20px rgba(212, 165, 116, 0.5);
     }
 
     .nav-btn:disabled {
@@ -265,32 +342,34 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      min-width: 200px;
+      min-width: 220px;
     }
 
     .page-slider {
       flex: 1;
       accent-color: var(--accent-crimson);
       cursor: pointer;
+      height: 6px;
     }
 
     .page-jump-input {
-      width: 60px;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(212, 165, 116, 0.3);
+      width: 65px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(212, 165, 116, 0.4);
       color: #fff;
-      padding: 0.4rem;
+      padding: 0.45rem;
       border-radius: 6px;
       text-align: center;
-      font-weight: 600;
+      font-weight: 700;
+      font-size: 0.9rem;
     }
 
     /* Modal / Drawer */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(10px);
       z-index: 100;
       display: none;
       justify-content: center;
@@ -306,12 +385,12 @@
       background: #0f0a07;
       border: 1px solid var(--accent-gold);
       border-radius: 12px;
-      max-width: 700px;
+      max-width: 750px;
       width: 100%;
       max-height: 85vh;
       overflow-y: auto;
-      padding: 2rem;
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+      padding: 2.25rem;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.95);
     }
 
     .modal-header {
@@ -333,7 +412,7 @@
       background: none;
       border: none;
       color: #fff;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       cursor: pointer;
     }
 
@@ -347,7 +426,7 @@
     }
 
     .toc-item {
-      padding: 0.6rem 0.8rem;
+      padding: 0.65rem 0.85rem;
       border-radius: 6px;
       display: flex;
       justify-content: space-between;
@@ -357,26 +436,26 @@
     }
 
     .toc-item:hover {
-      background: rgba(212, 165, 116, 0.15);
+      background: rgba(212, 165, 116, 0.18);
       color: #fff;
     }
 
     .review-score-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
+      gap: 1.25rem;
       margin: 1.5rem 0;
     }
 
     .score-card {
       background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(230, 57, 70, 0.3);
-      padding: 1rem;
+      border: 1px solid rgba(230, 57, 70, 0.35);
+      padding: 1.25rem;
       border-radius: 8px;
     }
 
     .score-num {
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: 700;
       color: #ff6b6b;
       font-family: var(--font-heading);
@@ -392,57 +471,74 @@
       <span>✦</span> The Anatomy of Echoed Scars
     </a>
 
-    <div class="rating-badge">RATING: 9.4 / 10</div>
+    <div class="rating-badge" onclick="openModal('reviewModal')" title="View 9.4/10 Detailed Story Review">
+      ⭐ CRITICAL REVIEW: 9.4 / 10
+    </div>
 
     <div class="header-actions">
+      <button class="btn-icon" onclick="goToCover()">
+        🖼️ Cover
+      </button>
       <button class="btn-icon" onclick="openModal('tocModal')">
         📖 Table of Contents (258 Pages)
       </button>
       <button class="btn-icon" onclick="openModal('reviewModal')">
-        ⭐ Critical Review (9.4/10)
+        📊 Review Score
       </button>
     </div>
   </header>
 
-  <!-- Main Reader Stage -->
+  <!-- Main Reader Container (True A4 Page Proportions) -->
   <main>
-    <div class="reader-card" id="readerCard">
-      <div class="page-header">
+    <div class="a4-container" id="a4Paper">
+      <!-- Filigree Corners -->
+      <div class="corner-accent corner-tl"></div>
+      <div class="corner-accent corner-tr"></div>
+      <div class="corner-accent corner-bl"></div>
+      <div class="corner-accent corner-br"></div>
+
+      <!-- Header Section -->
+      <div class="page-header" id="pageHeader">
         <div>
-          <div class="part-tag" id="partTag">Part I: The Genesis of Synaptic Affection</div>
-          <div class="chapter-tag" id="chapterTag">Chapter 1: The Resonance Chamber</div>
+          <div class="part-tag" id="partTag">Part I — The Architecture of Transference</div>
+          <div class="chapter-tag" id="chapterTag">Chapter 1: The Resonant Nerve</div>
         </div>
+
         <div class="trauma-bar-container">
-          <div class="trauma-label">Trauma Index: <span id="traumaVal">15%</span></div>
+          <div class="trauma-label" id="traumaLabel">Trauma: 15%</div>
           <div class="trauma-bar-bg">
-            <div class="trauma-bar-fill" id="traumaFill"></div>
+            <div class="trauma-bar-fill" id="traumaBar"></div>
           </div>
         </div>
       </div>
 
+      <!-- Page Content Body -->
       <div class="page-body" id="pageBody">
-        <!-- Content inserted dynamically -->
+        <!-- Content inserted dynamically via JS -->
       </div>
 
-      <div class="page-footer">
-        <span>Novel by Raj Patil</span>
-        <span>Page <strong id="pageCurrentDisplay" style="color: var(--accent-gold);">1</strong> of 258</span>
-        <span>The Anatomy of Echoed Scars</span>
+      <!-- Footer Section -->
+      <div class="page-footer" id="pageFooter">
+        <div>Author: <strong>Raj Patil</strong></div>
+        <div style="font-family: var(--font-heading); color: var(--accent-gold); font-size: 0.95rem; font-weight: 700;">
+          PAGE <span id="currentPageDisplay">1</span> / 258
+        </div>
+        <div>Genre: Neurological Trauma</div>
       </div>
     </div>
 
-    <!-- Controls Bar -->
+    <!-- Page Controls Bar -->
     <div class="controls-bar">
-      <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">← Previous</button>
+      <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">← Previous Page</button>
 
       <div class="page-slider-wrap">
-        <span style="font-size: 0.8rem; color: var(--text-muted);">Page</span>
-        <input type="range" min="1" max="258" value="1" class="page-slider" id="pageSlider" oninput="onSliderChange(this.value)">
-        <input type="number" min="1" max="258" value="1" class="page-jump-input" id="pageJumpInput" onchange="onJumpChange(this.value)">
+        <span style="font-size: 0.8rem; color: var(--accent-gold); font-weight: 600;">PAGE</span>
+        <input type="range" min="1" max="258" value="1" class="page-slider" id="pageSlider" oninput="jumpToPage(this.value)">
+        <input type="number" min="1" max="258" value="1" class="page-jump-input" id="pageInput" onchange="jumpToPage(this.value)">
         <span style="font-size: 0.8rem; color: var(--text-muted);">/ 258</span>
       </div>
 
-      <button class="nav-btn" id="nextBtn" onclick="changePage(1)">Next →</button>
+      <button class="nav-btn" id="nextBtn" onclick="changePage(1)">Next Page →</button>
     </div>
   </main>
 
@@ -450,100 +546,175 @@
   <div class="modal-overlay" id="tocModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title">Table of Contents (32 Chapters • 258 Pages)</h2>
+        <h2 class="modal-title">Table of Contents (258 Pages)</h2>
         <button class="close-btn" onclick="closeModal('tocModal')">&times;</button>
       </div>
-      <div id="tocList"></div>
+
+      <div id="tocContainer">
+        <!-- TOC dynamically rendered -->
+      </div>
     </div>
   </div>
 
-  <!-- Review & Rating Modal -->
+  <!-- Review Modal -->
   <div class="modal-overlay" id="reviewModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title">Literary Evaluation & Review (9.4 / 10)</h2>
+        <h2 class="modal-title">Literary Review & Rating (9.4 / 10)</h2>
         <button class="close-btn" onclick="closeModal('reviewModal')">&times;</button>
       </div>
-      <div>
-        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">
-          An official critical assessment of <em>The Anatomy of Echoed Scars</em> by Raj Patil.
-        </p>
 
-        <div class="review-score-grid">
-          <div class="score-card">
-            <div class="score-num">9.6 / 10</div>
-            <strong style="color: #fff; font-size: 0.9rem;">Trauma & Resonance</strong>
-            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">Visceral psychological impact of emotional contagion.</p>
-          </div>
-          <div class="score-card">
-            <div class="score-num">9.3 / 10</div>
-            <strong style="color: #fff; font-size: 0.9rem;">Narrative Clarity</strong>
-            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">Accessible English prose with sharp structural pacing.</p>
-          </div>
-          <div class="score-card">
-            <div class="score-num">9.5 / 10</div>
-            <strong style="color: #fff; font-size: 0.9rem;">Character Depth</strong>
-            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">Relentless immersion into relational boundaries.</p>
-          </div>
-          <div class="score-card">
-            <div class="score-num">9.7 / 10</div>
-            <strong style="color: #fff; font-size: 0.9rem;">Premise Originality</strong>
-            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">Unprecedented concept of neurological memory transfer.</p>
-          </div>
+      <p style="font-size: 0.95rem; color: var(--text-main); line-height: 1.6;">
+        An in-depth critical evaluation of <strong>The Anatomy of Echoed Scars</strong> by Raj Patil. Evaluated across 4 key dimensions of psychological dark fiction.
+      </p>
+
+      <div class="review-score-grid">
+        <div class="score-card">
+          <div class="score-num">9.7 / 10</div>
+          <div style="font-weight: 700; color: var(--accent-gold); margin-top: 0.2rem;">Premise Originality</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Synaptic Echoing memory transfer framework creates a hauntingly original psychological dilemma.</div>
         </div>
 
-        <div style="background: rgba(230, 57, 70, 0.1); border-left: 4px solid var(--accent-crimson); padding: 1rem; border-radius: 4px; margin-top: 1rem;">
-          <strong style="color: #ff6b6b; font-size: 0.95rem;">Key Takeaway:</strong>
-          <p style="font-size: 0.9rem; color: #ebdcc5; margin-top: 0.4rem; line-height: 1.6;">
-            "This book forces the reader to rethink emotional attachment entirely. It demonstrates that opening your mind to someone else can sometimes burn your identity to ashes. A thrilling, deeply unsettling masterwork."
-          </p>
+        <div class="score-card">
+          <div class="score-num">9.6 / 10</div>
+          <div style="font-weight: 700; color: var(--accent-gold); margin-top: 0.2rem;">Trauma Realism</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Visceral physical and emotional embodiment of relived trauma. Readers feel every fracture.</div>
         </div>
+
+        <div class="score-card">
+          <div class="score-num">9.5 / 10</div>
+          <div style="font-weight: 700; color: var(--accent-gold); margin-top: 0.2rem;">Character Depth</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Complex psychological arcs of Julian, Elora, and Dr. Vance across 32 chapters.</div>
+        </div>
+
+        <div class="score-card">
+          <div class="score-num">9.3 / 10</div>
+          <div style="font-weight: 700; color: var(--accent-gold); margin-top: 0.2rem;">Prose & Pacing</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Dense, poetic prose that maintains relentless psychological tension across 258 pages.</div>
+        </div>
+      </div>
+
+      <div style="background: rgba(230, 57, 70, 0.1); border: 1px solid rgba(230, 57, 70, 0.3); padding: 1rem; border-radius: 8px; font-size: 0.85rem; color: #ebdcc5;">
+        <strong style="color: #ff6b6b;">Overall Verdict (9.4/10):</strong> A masterpiece of dark psychological fiction. It forces the reader to reconsider the boundary of love, asking if complete empathy is a spiritual gift or the ultimate act of self-destruction.
       </div>
     </div>
   </div>
 
-  <!-- Scripts -->
+  <!-- Novel Data Import & Reader Logic -->
   <script type="module">
-    import { BOOK_METADATA, PARTS, CHAPTERS, generatePageContent } from '/src/echoed_scars_novel_data.js';
+    import { novelData, chapters, getPageData } from '/src/echoed_scars_novel_data.js';
 
     let currentPage = 1;
-    const totalPages = 258;
+    let showingCover = false;
 
-    function renderPage(pageNum) {
-      if (pageNum < 1) pageNum = 1;
-      if (pageNum > totalPages) pageNum = totalPages;
-      currentPage = pageNum;
+    window.jumpToPage = function(page) {
+      page = parseInt(page);
+      if (isNaN(page)) return;
+      if (page < 1) page = 1;
+      if (page > 258) page = 258;
+      currentPage = page;
+      showingCover = false;
+      renderPage();
+    };
 
-      const data = generatePageContent(currentPage);
+    window.changePage = function(delta) {
+      if (showingCover && delta > 0) {
+        showingCover = false;
+        currentPage = 1;
+        renderPage();
+        return;
+      }
+      jumpToPage(currentPage + delta);
+    };
 
-      document.getElementById('partTag').textContent = data.partTitle;
-      document.getElementById('chapterTag').textContent = data.chapterTitle;
-      document.getElementById('traumaVal').textContent = `${data.traumaMeter}%`;
-      document.getElementById('traumaFill').style.width = `${data.traumaMeter}%`;
-      document.getElementById('pageBody').innerHTML = data.content.replace(/\n/g, '<br><br>');
-      document.getElementById('pageCurrentDisplay').textContent = currentPage;
+    window.goToCover = function() {
+      showingCover = true;
+      renderCoverPage();
+    };
 
+    function renderCoverPage() {
+      const pageHeader = document.getElementById('pageHeader');
+      const pageBody = document.getElementById('pageBody');
+      const pageFooter = document.getElementById('pageFooter');
+
+      pageHeader.style.display = 'none';
+      pageFooter.style.display = 'none';
+
+      pageBody.innerHTML = `
+        <div class="cover-view">
+          <div class="cover-image-frame">
+            <img src="/cover.jpg" alt="The Anatomy of Echoed Scars Book Cover">
+          </div>
+          <div style="text-align: center; space-y-2;">
+            <div style="font-family: var(--font-heading); color: var(--accent-gold); font-size: 1.8rem; font-weight: 700;">THE ANATOMY OF ECHOED SCARS</div>
+            <div style="font-size: 0.9rem; color: var(--accent-crimson); font-weight: 600; uppercase; letter-spacing: 0.1em; margin-top: 0.2rem;">By Raj Patil • 258 Pages</div>
+            <p style="font-size: 0.95rem; color: #ebdcc5; margin-top: 0.75rem; max-width: 500px; text-align: center; text-indent: 0;">
+              "Synaptic Echoing transfers traumatic memories between lovers until intimacy becomes psychological self-destruction."
+            </p>
+            <button onclick="jumpToPage(1)" style="margin-top: 1.25rem; background: var(--accent-crimson); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; box-shadow: 0 0 20px rgba(230,57,70,0.5);">
+              📖 Begin Reading Page 1
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('prevBtn').disabled = true;
+      document.getElementById('nextBtn').disabled = false;
+      document.getElementById('currentPageDisplay').innerText = 'COVER';
+    }
+
+    function renderPage() {
+      const data = getPageData(currentPage);
+      const pageHeader = document.getElementById('pageHeader');
+      const pageBody = document.getElementById('pageBody');
+      const pageFooter = document.getElementById('pageFooter');
+
+      pageHeader.style.display = 'flex';
+      pageFooter.style.display = 'flex';
+
+      document.getElementById('partTag').innerText = data.part;
+      document.getElementById('chapterTag').innerText = data.chapter;
+      document.getElementById('traumaLabel').innerText = `Trauma: ${data.traumaIndex}%`;
+      document.getElementById('traumaBar').style.width = `${data.traumaIndex}%`;
+
+      pageBody.innerHTML = `<p>${data.content}</p>`;
+
+      document.getElementById('currentPageDisplay').innerText = currentPage;
       document.getElementById('pageSlider').value = currentPage;
-      document.getElementById('pageJumpInput').value = currentPage;
+      document.getElementById('pageInput').value = currentPage;
 
       document.getElementById('prevBtn').disabled = (currentPage === 1);
-      document.getElementById('nextBtn').disabled = (currentPage === totalPages);
+      document.getElementById('nextBtn').disabled = (currentPage === 258);
 
-      // Scroll to top of card smoothly
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    window.changePage = function(delta) {
-      renderPage(currentPage + delta);
-    };
+    // Render Table of Contents
+    function renderTOC() {
+      const container = document.getElementById('tocContainer');
+      let currentPart = '';
+      let html = '';
 
-    window.onSliderChange = function(val) {
-      renderPage(parseInt(val));
-    };
+      chapters.forEach(ch => {
+        if (ch.part !== currentPart) {
+          currentPart = ch.part;
+          html += `<div class="toc-part">${currentPart}</div>`;
+        }
 
-    window.onJumpChange = function(val) {
-      renderPage(parseInt(val));
-    };
+        html += `
+          <div class="toc-item" onclick="jumpToPage(${ch.startPage}); closeModal('tocModal');">
+            <div>
+              <strong>Chapter ${ch.chapterNum}:</strong> ${ch.title}
+            </div>
+            <div style="color: var(--accent-gold); font-weight: 600;">
+              p. ${ch.startPage}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
 
     window.openModal = function(id) {
       document.getElementById(id).classList.add('active');
@@ -553,38 +724,17 @@
       document.getElementById(id).classList.remove('active');
     };
 
-    // Keyboard navigation
+    // Keyboard Navigation
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') changePage(-1);
-      if (e.key === 'ArrowRight') changePage(1);
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+        changePage(1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        changePage(-1);
+      }
     });
 
-    // Populate TOC
-    const tocList = document.getElementById('tocList');
-    PARTS.forEach(part => {
-      const partHeader = document.createElement('div');
-      partHeader.className = 'toc-part';
-      partHeader.textContent = `${part.title} (${part.pages})`;
-      tocList.appendChild(partHeader);
-
-      const partChs = CHAPTERS.filter(c => c.part === part.id);
-      partChs.forEach(ch => {
-        const item = document.createElement('div');
-        item.className = 'toc-item';
-        item.innerHTML = `
-          <span>${ch.number}: ${ch.title}</span>
-          <span style="color: var(--accent-gold);">Pages ${ch.startPage}–${ch.endPage}</span>
-        `;
-        item.onclick = () => {
-          renderPage(ch.startPage);
-          closeModal('tocModal');
-        };
-        tocList.appendChild(item);
-      });
-    });
-
-    // Initial render
-    renderPage(1);
+    renderPage();
+    renderTOC();
   </script>
 </body>
 </html>
