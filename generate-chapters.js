@@ -493,21 +493,8 @@ chapters.forEach((ch, idx) => {
   console.log(`Generated: ${dirName}/index.html`);
 });
 
-// Overwrite TOC in book overview index.html
-const bookIndexFile = path.resolve(__dirname, 'book/the-unreadable/index.html');
-if (fs.existsSync(bookIndexFile)) {
-  let bookIndexHtml = fs.readFileSync(bookIndexFile, 'utf-8');
-  const tocListHtml = tocItems.map(item => {
-    if (item.isPart) {
-      return `<li class="col-span-full mt-6 mb-2 text-[#d4a574] font-semibold uppercase tracking-wider text-[10px] border-b border-white/10 pb-1">${item.label}</li>`;
-    }
-    return `<li><a href="${item.url}" class="block py-1.5 hover:text-[#d4a574] transition-colors text-gray-400 text-xs">${item.label}</a></li>`;
-  }).join('\n');
-  
-  bookIndexHtml = bookIndexHtml.replace('<!-- TOC_LIST -->', tocListHtml);
-  fs.writeFileSync(bookIndexFile, bookIndexHtml);
-  console.log('Injected TOC into book/the-unreadable/index.html');
-}
+// Note: book/the-unreadable/index.html is maintained as a multi-book library showcase.
+
 
 // Generate sitemap.xml dynamically
 const sitemapFile = path.resolve(__dirname, 'public/sitemap.xml');
